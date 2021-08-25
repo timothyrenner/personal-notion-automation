@@ -26,12 +26,13 @@ jobs:
           pip install -r requirements.txt
 
       - name: Check Week
+        id: check_week
         run: |
           python scripts/check_recycling_week.py
         continue-on-error: true
 
       - name: Run Script
-        if: ${{ success() }}
+        if: ${{ steps.check_week.outcome == 'success' }}
         run: |
           python scripts/add_personal_task.py \
             --name "Recycling" \
