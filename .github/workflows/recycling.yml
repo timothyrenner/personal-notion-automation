@@ -1,0 +1,39 @@
+name: recycling
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * TUE"
+
+jobs:
+  recycling:
+    runs-on: ubuntu-latest
+    env:
+      NOTION_KEY: ${{ secrets.NOTION_KEY }}
+      NOTION_PERSONAL_TASKS_DATABASE_ID: ${{ secrets.NOTION_PERSONAL_TASKS_DATABASE_ID }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Check Week
+        run: |
+          python scripts/check_recycling_week.py
+        continue-on-error: true
+
+      - name: Run Script
+        if: ${{ success() }}
+        run: |
+          python scripts/add_personal_task.py \
+            --name "Recycling" \
+            --project House \
+            --status "On Deck"
