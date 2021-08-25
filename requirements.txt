@@ -1,0 +1,7 @@
+requests
+flake8
+black
+mypy
+typer
+loguru
+python-dotenv
