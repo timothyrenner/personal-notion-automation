@@ -28,6 +28,6 @@ jobs:
       - name: Run Script
         run: |
           python scripts/add_personal_task.py \
-            --name "Take out the trash"
-            --project House
+            --name "Take out the trash" \
+            --project House \
             --status "On Deck"
