@@ -5,3 +5,4 @@ mypy
 typer
 loguru
 python-dotenv
+pendulum
