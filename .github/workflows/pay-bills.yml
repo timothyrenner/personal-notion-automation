@@ -1,4 +1,4 @@
-name: garbage_day
+name: pay_bills
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
     - cron: "0 6 * * TUE"
 
 jobs:
-  garbage_day:
+  pay_bills:
     runs-on: ubuntu-latest
     env:
       NOTION_KEY: ${{ secrets.NOTION_KEY }}
