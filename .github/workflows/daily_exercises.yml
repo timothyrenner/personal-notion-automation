@@ -36,5 +36,5 @@ jobs:
       - name: Run Script
         run: |
           python scripts/add_exercise_tracker_day.py \
-            --name "${{ steps.get_day_of_week.day_of_week }}" \
-            --date "${{ steps.get_current_date.current_date }}"
+            --name "${{ steps.get_day_of_week.outputs.day_of_week }}" \
+            --date "${{ steps.get_current_date.outputs.current_date }}"
