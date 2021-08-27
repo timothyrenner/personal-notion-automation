@@ -1,0 +1,58 @@
+import typer
+import os
+import sys
+import requests
+
+from dotenv import load_dotenv, find_dotenv
+from loguru import logger
+
+"https://www.notion.so/timothyrenner/72ae9eebab3a4bd198c1602fba21fb84?v=59b04cb3bb0f461cb3f7408027dbfcf0"
+"https://www.notion.so/timothyrenner/72ae9eebab3a4bd198c1602fba21fb84?v=15a488d01e4f4052a24d9d2b1c5dd137"
+
+logger.info("Loading .env file.")
+load_dotenv(find_dotenv())
+NOTION_KEY = os.getenv("NOTION_KEY")
+if not NOTION_KEY:
+    logger.error(
+        "No entry for NOTION_KEY in .env or environment. Terminating."
+    )
+    sys.exit(1)
+
+EXERCISE_TRACKER_DATABASE_ID = os.getenv("NOTION_EXERCISE_TRACKER_DATABASE_ID")
+if not EXERCISE_TRACKER_DATABASE_ID:
+    logger.error(
+        "No entry for NOTION_EXERCISE_TRACKER_DATABASE_ID in .env or "
+        "environment. Terminating."
+    )
+    sys.exit(1)
+
+NOTION_URL = "https://api.notion.com"
+
+
+def main(name: str = typer.Option(...), date: str = typer.Option(...)):
+    session = requests.Session()
+    session.headers.update(
+        {
+            "Authorization": f"Bearer {NOTION_KEY}",
+            "Content-Type": "application/json",
+            "Notion-Version": "2021-08-16",
+        }
+    )
+    create_record_payload = {
+        "parent": {"database_id": EXERCISE_TRACKER_DATABASE_ID},
+        "properties": {
+            "Name": {"title": [{"type": "text", "text": {"content": name}}]},
+            "Date": {"date": {"start": date, "end": None}},
+        },
+    }
+    logger.info("Creating record.")
+    response = session.post(
+        f"{NOTION_URL}/v1/pages", json=create_record_payload
+    )
+    if not response.ok:
+        logger.error(response.json())
+    logger.info("💪 page created successfully 💪 ")
+
+
+if __name__ == "__main__":
+    typer.run(main)
