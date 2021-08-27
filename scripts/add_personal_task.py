@@ -22,6 +22,7 @@ if not PERSONAL_TASKS_DATABASE_ID:
         "No entry for NOTION_PERSONAL_TASKS_DATABASE_ID in .env or "
         "environment. Terminating."
     )
+    sys.exit(1)
 
 NOTION_URL = "https://api.notion.com"
 
