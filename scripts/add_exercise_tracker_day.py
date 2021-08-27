@@ -6,9 +6,6 @@ import requests
 from dotenv import load_dotenv, find_dotenv
 from loguru import logger
 
-"https://www.notion.so/timothyrenner/72ae9eebab3a4bd198c1602fba21fb84?v=59b04cb3bb0f461cb3f7408027dbfcf0"
-"https://www.notion.so/timothyrenner/72ae9eebab3a4bd198c1602fba21fb84?v=15a488d01e4f4052a24d9d2b1c5dd137"
-
 logger.info("Loading .env file.")
 load_dotenv(find_dotenv())
 NOTION_KEY = os.getenv("NOTION_KEY")

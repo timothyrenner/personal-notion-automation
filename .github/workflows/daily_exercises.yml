@@ -1,0 +1,40 @@
+name: daily_exercises
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 1 * *"
+
+jobs:
+  daily_exercises:
+    runs-on: ubuntu-latest
+    env:
+      NOTION_KEY: ${{ secrets.NOTION_KEY }}
+      NOTION_EXERCISE_TRACKER_DATABASE_ID: ${{ secrets.NOTION_EXERCISE_TRACKER_DATABASE_ID }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Get current date.
+        id: get_current_date
+        run: echo "::set-output current_date=::$(date +'%Y-%m-%d')"
+
+      - name: Get day of week
+        id: get_day_of_week
+        run: echo "::set-output day_of_week=::$(date +'%A')"
+
+      - name: Run Script
+        run: |
+          python scripts/add_exercise_tracker_day.py \
+            --name "${{ steps.get_day_of_week.day_of_week }}" \
+            --date "${{ steps.get_current_date.current_date }}"
