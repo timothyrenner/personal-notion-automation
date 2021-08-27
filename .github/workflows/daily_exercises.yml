@@ -27,11 +27,11 @@ jobs:
 
       - name: Get current date.
         id: get_current_date
-        run: echo "::set-output current_date=::$(date +'%Y-%m-%d')"
+        run: echo "::set-output name=current_date::$(date +'%Y-%m-%d')"
 
       - name: Get day of week
         id: get_day_of_week
-        run: echo "::set-output day_of_week=::$(date +'%A')"
+        run: echo "::set-output name=day_of_week::$(date +'%A')"
 
       - name: Run Script
         run: |
