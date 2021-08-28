@@ -29,6 +29,7 @@ NOTION_URL = "https://api.notion.com"
 
 class Tag(str, Enum):
     mle = "MLE"
+    misc = "Misc"
 
 
 class Status(str, Enum):
