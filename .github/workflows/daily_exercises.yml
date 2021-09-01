@@ -3,7 +3,7 @@ name: daily_exercises
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 6 * * *"
+    - cron: "0 11 * * *"
 
 jobs:
   daily_exercises:

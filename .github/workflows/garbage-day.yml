@@ -3,7 +3,7 @@ name: garbage_day
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 6 * * TUE"
+    - cron: "0 11 * * TUE"
 
 jobs:
   garbage_day:

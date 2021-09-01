@@ -3,7 +3,7 @@ name: pay_bills
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 6 * * TUE"
+    - cron: "0 11 * * TUE"
 
 jobs:
   pay_bills:
