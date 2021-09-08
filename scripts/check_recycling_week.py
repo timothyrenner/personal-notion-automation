@@ -7,13 +7,13 @@ from loguru import logger
 
 def main():
     today = pendulum.now("America/Chicago")
-    today_week_of_month = today.week_of_month
+    today_week_of_year = today.week_of_year
 
     logger.info(
-        f"Week of month for {today.strftime('%Y-%m-%d')}: "
-        f"{today_week_of_month}."
+        f"Week of year for {today.strftime('%Y-%m-%d')}: "
+        f"{today_week_of_year}."
     )
-    if today_week_of_month not in {2, 4, 6}:
+    if today_week_of_year % 2 > 0:
         logger.info("Not a recycling week. Stopping.")
         sys.exit(1)
 
