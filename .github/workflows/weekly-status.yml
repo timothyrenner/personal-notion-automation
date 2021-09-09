@@ -29,5 +29,4 @@ jobs:
         run: |
           python scripts/add_work_task.py \
             --name "Weekly status" \
-            --tags MLE \
             --status "On Deck"

@@ -27,11 +27,6 @@ if not WORK_TASKS_DATABASE_ID:
 NOTION_URL = "https://api.notion.com"
 
 
-class Tag(str, Enum):
-    mle = "MLE"
-    misc = "Misc"
-
-
 class Status(str, Enum):
     to_do = "To Do"
     doing = "Doing"
@@ -43,7 +38,6 @@ class Status(str, Enum):
 def main(
     name: str = typer.Option(...),
     status: Status = typer.Option(...),
-    tags: List[Tag] = typer.Option(...),
 ):
     session = requests.Session()
     session.headers.update(
@@ -59,7 +53,6 @@ def main(
         "properties": {
             "Name": {"title": [{"type": "text", "text": {"content": name}}]},
             "Status": {"select": {"name": status}},
-            "Tags": {"multi_select": [{"name": t} for t in tags]},
         },
     }
     logger.info("Creating record.")
