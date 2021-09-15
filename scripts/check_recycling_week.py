@@ -13,7 +13,7 @@ def main():
         f"Week of year for {today.strftime('%Y-%m-%d')}: "
         f"{today_week_of_year}."
     )
-    if today_week_of_year % 2 > 0:
+    if today_week_of_year % 2 == 0:
         logger.info("Not a recycling week. Stopping.")
         sys.exit(1)
 
