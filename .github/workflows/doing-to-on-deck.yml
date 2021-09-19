@@ -1,0 +1,28 @@
+name: doing_to_on_deck
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 5 * * *" # midnight central time.
+
+jobs:
+  doing_to_on_deck:
+    runs-on: ubuntu-latest
+    env:
+      NOTION_KEY: ${{ secrets.NOTION_KEY }}
+
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.9"
+
+    - name: Install Dependencies
+      run: |
+        pip install -r requirements.txt
+
+    - name: Run Script
+      run: python scripts/move_tasks_to_on_deck.py
