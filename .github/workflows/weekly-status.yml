@@ -12,22 +12,22 @@ jobs:
       NOTION_KEY: ${{ secrets.NOTION_KEY }}
       NOTION_WORK_TASKS_DATABASE_ID: ${{ secrets.NOTION_WORK_TASKS_DATABASE_ID }}
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.9"
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.9"
 
-      - name: Install Dependencies
-        run: |
-          pip install -r requirements.txt
+    - name: Install Dependencies
+      run: |
+        pip install -r requirements.txt
 
-      - name: Run Script
-        run: |
-          python scripts/add_work_task.py \
-            --name "Weekly status" \
-            --status "On Deck" \
-            --project-name "MLE"
+    - name: Run Script
+      run: |
+        python scripts/add_work_task.py \
+          --name "Weekly status" \
+          --status "On Deck" \
+          --project-name "MLE"
