@@ -11,18 +11,18 @@ jobs:
     env:
       NOTION_KEY: ${{ secrets.NOTION_KEY }}
 
-  steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: "3.9"
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
 
-    - name: Install Dependencies
-      run: |
-        pip install -r requirements.txt
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
 
-    - name: Run Script
-      run: python scripts/move_tasks_to_on_deck.py
+      - name: Run Script
+        run: python scripts/move_tasks_to_on_deck.py
