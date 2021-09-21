@@ -1,0 +1,92 @@
+name: weekly_tuesday
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 5 * * TUE" # midnight cdt
+
+jobs:
+  garbage_day:
+    runs-on: ubuntu-latest
+    env:
+      NOTION_KEY: ${{ secrets.NOTION_KEY }}
+      NOTION_PERSONAL_TASKS_DATABASE_ID: ${{ secrets.NOTION_PERSONAL_TASKS_DATABASE_ID }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run Script
+        run: |
+          python scripts/add_personal_task.py \
+            --name "Take out the trash" \
+            --project House \
+            --status "On Deck"
+
+  recycling:
+    runs-on: ubuntu-latest
+    env:
+      NOTION_KEY: ${{ secrets.NOTION_KEY }}
+      NOTION_PERSONAL_TASKS_DATABASE_ID: ${{ secrets.NOTION_PERSONAL_TASKS_DATABASE_ID }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Check Week
+        id: check_week
+        run: |
+          python scripts/check_recycling_week.py
+        continue-on-error: true
+
+      - name: Run Script
+        if: ${{ steps.check_week.outcome == 'success' }}
+        run: |
+          python scripts/add_personal_task.py \
+            --name "Recycling" \
+            --project House \
+            --status "On Deck"
+
+  pay_bills:
+    runs-on: ubuntu-latest
+    env:
+      NOTION_KEY: ${{ secrets.NOTION_KEY }}
+      NOTION_PERSONAL_TASKS_DATABASE_ID: ${{ secrets.NOTION_PERSONAL_TASKS_DATABASE_ID }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run Script
+        run: |
+          python scripts/add_personal_task.py \
+            --name "Pay bills" \
+            --project House \
+            --status "On Deck"
