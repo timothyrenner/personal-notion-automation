@@ -27,10 +27,11 @@ jobs:
 
       - name: Run Script
         run: |
-          python scripts/add_personal_task.py \
+          python scripts/add_tasl.py \
             --name "Take out the trash" \
             --project House \
-            --status "On Deck"
+            --status "On Deck" \
+            --task-type "work"
 
   recycling:
     runs-on: ubuntu-latest
@@ -60,10 +61,11 @@ jobs:
       - name: Run Script
         if: ${{ steps.check_week.outcome == 'success' }}
         run: |
-          python scripts/add_personal_task.py \
+          python scripts/add_task.py \
             --name "Recycling" \
             --project House \
-            --status "On Deck"
+            --status "On Deck" \
+            --task-type "work"
 
   pay_bills:
     runs-on: ubuntu-latest
@@ -86,7 +88,8 @@ jobs:
 
       - name: Run Script
         run: |
-          python scripts/add_personal_task.py \
+          python scripts/add_task.py \
             --name "Pay bills" \
             --project House \
-            --status "On Deck"
+            --status "On Deck" \
+            --task-type "work"

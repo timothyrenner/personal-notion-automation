@@ -33,7 +33,8 @@ jobs:
       - name: Run Script
         if: ${{ steps.check_week.outcome == 'success' }}
         run: |
-          python scripts/add_personal_task.py \
+          python scripts/add_task.py \
             --name "Clean room" \
+            --status "On Deck" \
             --project House \
-            --status "On Deck"
+            --task-type "work"
