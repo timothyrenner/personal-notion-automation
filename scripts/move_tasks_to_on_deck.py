@@ -17,25 +17,13 @@ if not NOTION_KEY:
     sys.exit(1)
 
 NOTION_URL = "https://api.notion.com"
-
-
-def get_task_databases(session: requests.Session) -> List[str]:
-    search_payload = {
-        "query": "Task",
-        "filter": {"value": "database", "property": "object"},
-    }
-
-    search_response = session.post(
-        f"{NOTION_URL}/v1/search", json=search_payload
+TASKS_DATABASE_ID = os.getenv("NOTION_TASKS_DATABASE_ID")
+if not TASKS_DATABASE_ID:
+    logger.error(
+        "No entry for NOTION_TASKS_DATABASE_ID in .env or environment. "
+        "Terminating."
     )
-    if not search_response.ok:
-        logger.error("Unable to perform search for task databases.")
-        logger.error(search_response.json())
-        sys.exit(1)
-
-    search_response_json = search_response.json()
-
-    return [x["id"] for x in search_response_json["results"]]
+    sys.exit(1)
 
 
 def get_in_progress_tasks(
@@ -88,18 +76,11 @@ def main():
         }
     )
 
-    logger.info(f"Obtaining task databases.")
-    task_databases = get_task_databases(session)
-
-    logger.info(f"Obtained {len(task_databases)} task databases.")
-
-    for database_id in task_databases:
-        logger.info("Obtaining in progress tasks.")
-        in_progress_tasks = get_in_progress_tasks(session, database_id)
-
-        for task_id in in_progress_tasks:
-            logger.info("Setting task to 'On Deck'.")
-            set_to_on_deck(session, task_id)
+    logger.info("Obtaining in progress tasks.")
+    in_progress_tasks = get_in_progress_tasks(session, TASKS_DATABASE_ID)
+    for task_id in in_progress_tasks:
+        logger.info("Setting task to 'On Deck'.")
+        set_to_on_deck(session, task_id)
 
 
 if __name__ == "__main__":
