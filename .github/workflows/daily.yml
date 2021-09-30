@@ -6,10 +6,12 @@ on:
     - cron: "0 5 * * *" # midnight central.
 
 jobs:
-  daily_exercises:
+  daily_stuff:
     runs-on: ubuntu-latest
     env:
       NOTION_KEY: ${{ secrets.NOTION_KEY }}
+      NOTION_TASKS_DATABASE_ID: ${{ secrets.NOTION_TASKS_DATABASE_ID }}
+      NOTION_PROJECTS_DATABASE_ID: ${{ secrets.NOTION_PROJECTS_DATABASE_ID }}
       NOTION_EXERCISE_TRACKER_DATABASE_ID: ${{ secrets.NOTION_EXERCISE_TRACKER_DATABASE_ID }}
 
     steps:
@@ -33,30 +35,29 @@ jobs:
         id: get_day_of_week
         run: echo "::set-output name=day_of_week::$(date +'%A')"
 
-      - name: Run Script
+      - name: Exercise Tracker
         run: |
           python scripts/add_exercise_tracker_day.py \
             --name "${{ steps.get_day_of_week.outputs.day_of_week }}" \
             --date "${{ steps.get_current_date.outputs.current_date }}"
 
-  doing_to_on_deck:
-    runs-on: ubuntu-latest
-    env:
-      NOTION_KEY: ${{ secrets.NOTION_KEY }}
-      NOTION_TASKS_DATABASE_ID: ${{ secrets.NOTION_TASKS_DATABASE_ID }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.9"
-
-      - name: Install Dependencies
-        run: |
-          pip install -r requirements.txt
-
-      - name: Run Script
+      - name: Move Tasks to On Deck
         run: python scripts/move_tasks_to_on_deck.py
+
+      - name: Meditation
+        run: |
+          python scripts/add_task.py \
+            --name "Meditate" \
+            --status "On Deck" \
+            --project "Wellness" \
+            --task-type "work" \
+            --skip-existing
+
+      - name: Read
+        run: |
+          python scripts/add_task.py \
+            --name "Read" \
+            --status "On Deck" \
+            --project "Wellness" \
+            --task-type "work" \
+            --skip-existing

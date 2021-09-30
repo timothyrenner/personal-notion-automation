@@ -32,4 +32,5 @@ jobs:
             --name "Weekly status" \
             --status "On Deck" \
             --project "MLE" \
-            --task-type "coordination"
+            --task-type "coordination" \
+            --skip-existing
