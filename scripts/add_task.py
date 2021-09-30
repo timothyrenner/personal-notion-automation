@@ -86,11 +86,78 @@ def get_project_id(session: requests.Session, project_name: Project) -> str:
     return project_id
 
 
+def check_if_task_exists(
+    session: requests.Session,
+    name: str,
+    project_ids: List[str],
+    task_type: TaskType,
+) -> bool:
+    query = {
+        "filter": {
+            "and": [
+                # Match any of the project ids...
+                {
+                    "or": [
+                        {
+                            "property": "Project",
+                            "relation": {"contains": project_id},
+                        }
+                        for project_id in project_ids
+                    ]
+                },
+                # ... and the name ...
+                {"property": "Name", "title": {"equals": name}},
+                # ... and the task type.
+                {"property": "Type of Task", "select": {"equals": task_type}},
+            ]
+        }
+    }
+
+    query_response = session.post(
+        f"{NOTION_URL}/v1/databases/{TASKS_DATABASE_ID}/query", json=query
+    )
+
+    if not query_response.ok:
+        logger.error("Unable to perform query for identical tasks.")
+        logger.error(query_response.json())
+        sys.exit(1)
+
+    query_response_json = query_response.json()
+
+    return len(query_response_json["results"]) > 0
+
+
+def create_record(
+    session: requests.Session,
+    name: str,
+    status: Status,
+    project_ids: List[str],
+    task_type: TaskType,
+):
+    create_record_payload = {
+        "parent": {"database_id": TASKS_DATABASE_ID},
+        "properties": {
+            "Name": {"title": [{"type": "text", "text": {"content": name}}]},
+            "Status": {"select": {"name": status}},
+            "Type of Task": {"select": {"name": task_type}},
+            "Project": {"relation": [{"id": pid} for pid in project_ids]},
+        },
+    }
+
+    response = session.post(
+        f"{NOTION_URL}/v1/pages", json=create_record_payload
+    )
+    if not response.ok:
+        logger.error(response.json())
+        sys.exit(1)
+
+
 def main(
     name: str = typer.Option(...),
     status: Status = typer.Option(...),
     project: List[Project] = typer.Option(...),
     task_type: TaskType = TaskType.work,
+    skip_existing: bool = typer.Option(False, "--skip-existing"),
 ):
     session = requests.Session()
     session.headers.update(
@@ -104,23 +171,19 @@ def main(
     logger.info(f"Obtaining ID for {project}.")
     project_ids = [get_project_id(session, p) for p in project]
 
-    create_record_payload = {
-        "parent": {"database_id": TASKS_DATABASE_ID},
-        "properties": {
-            "Name": {"title": [{"type": "text", "text": {"content": name}}]},
-            "Status": {"select": {"name": status}},
-            "Type of Task": {"select": {"name": task_type}},
-            "Project": {"relation": [{"id": pid} for pid in project_ids]},
-        },
-    }
+    skip_create = False
 
-    logger.info("Creating record.")
-    response = session.post(
-        f"{NOTION_URL}/v1/pages", json=create_record_payload
-    )
-    if not response.ok:
-        logger.error(response.json())
-        sys.exit(1)
+    if skip_existing:
+        logger.info("Querying for identical tasks.")
+        skip_create = check_if_task_exists(
+            session, name, project_ids, task_type
+        )
+
+    if not skip_create:
+        logger.info("Creating record.")
+        create_record(session, name, status, project_ids, task_type)
+    else:
+        logger.info("Task exists. Skipping creation.")
 
 
 if __name__ == "__main__":
