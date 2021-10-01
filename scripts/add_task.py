@@ -109,6 +109,8 @@ def check_if_task_exists(
                 {"property": "Name", "title": {"equals": name}},
                 # ... and the task type.
                 {"property": "Type of Task", "select": {"equals": task_type}},
+                # ... with status not equal to "Done.'
+                {"property": "Status", "select": {"does_not_equal": "Done"}},
             ]
         }
     }
