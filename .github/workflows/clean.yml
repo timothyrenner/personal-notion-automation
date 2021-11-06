@@ -10,7 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NOTION_KEY: ${{ secrets.NOTION_KEY }}
-      NOTION_PERSONAL_TASKS_DATABASE_ID: ${{ secrets.NOTION_PERSONAL_TASKS_DATABASE_ID }}
+      NOTION_TASKS_DATABASE_ID: ${{ secrets.NOTION_TASKS_DATABASE_ID }}
+      NOTION_PROJECTS_DATABASE_ID: ${{ secrets.NOTION_PROJECTS_DATABASE_ID }}
 
     steps:
       - name: Checkout
