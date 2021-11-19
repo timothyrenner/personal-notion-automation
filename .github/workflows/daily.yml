@@ -43,21 +43,3 @@ jobs:
 
       - name: Move Tasks to On Deck
         run: python scripts/move_tasks_to_on_deck.py
-
-      - name: Meditation
-        run: |
-          python scripts/add_task.py \
-            --name "Meditate" \
-            --status "On Deck" \
-            --project "Wellness" \
-            --task-type "work" \
-            --skip-existing
-
-      - name: Read
-        run: |
-          python scripts/add_task.py \
-            --name "Read" \
-            --status "On Deck" \
-            --project "Wellness" \
-            --task-type "work" \
-            --skip-existing
