@@ -31,7 +31,7 @@ jobs:
         run: python scripts/check_cleaning_week.py
         continue-on-error: true
 
-      - name: Run Script
+      - name: Run Clean Room
         if: ${{ steps.check_week.outcome == 'success' }}
         run: |
           python scripts/add_task.py \
@@ -39,3 +39,12 @@ jobs:
             --status "On Deck" \
             --project House \
             --task-type "work"
+      
+      - name: Run Drain Water Heater
+        if: ${{ steps.check_week.outcome == 'success' }}
+        run: |
+          python scripts/add_task.py \
+            --name "Drain water heater for 10 minutes" \
+            --status "On Deck" \
+            --project House \
+            --task-type work
