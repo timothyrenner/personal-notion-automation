@@ -1,13 +1,15 @@
 import typer
 import sys
-import pendulum
+from datetime import datetime
 
 from loguru import logger
 
 
 def main():
-    today = pendulum.now()
-    if today.week_of_month > 1:
+    today = datetime.today()
+    week_of_year = int(today.strftime("%W"))
+
+    if (week_of_year % 4) != 0:
         logger.info("Not a cleaning week. Stopping.")
         sys.exit(1)
 
